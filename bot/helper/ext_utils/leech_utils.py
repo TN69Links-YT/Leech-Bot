@@ -248,7 +248,12 @@ async def format_filename(file_, user_id, dirpath=None, isMirror=False):
     remname = config_dict[f'{ctag}_FILENAME_REMNAME'] if (val:=user_dict.get(f'{ftag}remname', '')) == '' else val
     suffix = config_dict[f'{ctag}_FILENAME_SUFFIX'] if (val:=user_dict.get(f'{ftag}suffix', '')) == '' else val
     lcaption = config_dict['LEECH_FILENAME_CAPTION'] if (val:=user_dict.get('lcaption', '')) == '' else val
- 
+    metadata_key = user_dict.get('metadata', '') or config_dict['METADATA_KEY']
+    prefile_ = file_
+    
+    if metadata_key and dirpath and isMkv(file_):
+        file_ = await change_metadata(file_, dirpath, metadata_key)
+        
     prefile_ = file_
     file_ = re_sub(r'www\S+', '', file_)
         
